@@ -1,6 +1,5 @@
 include ../components/pug/vars.pug
 include ../components/pug/mixin.pug
-include ../components/pug/mini-blocks.pug
 
 doctype
 html
@@ -9,91 +8,12 @@ html
 		include ../components/pug/links.pug
 		+title('Index page')
 		+desc('Index page desc')
-	body.page.index
-		.page-overlay
-			+button-cancel
+	body
 
 		include ../blocks/header/header.pug
 
 		main.page-container
-			include ../blocks/mainblock/mainblock.pug
-			.page-inner
-				+index-circle
-				section.fast-links
-					.container
-						.fast-links-block
-							.fast-links-caption
-								.fast-links-caption__title Оборудование
-								.fast-links-caption__text Доступно <a href="#">сервисное обслуживание оборудования</a>
-						.blurred-card
-							.blurred-card__title Банкоматы
-							img.blurred-card__img(src=img+"fast-links-img1.png", alt="")
-							a.blurred-card__link(href="#")
-								span Подробнее
-								+button-arrow
-						.blurred-card
-							.blurred-card__title <span>POS-терминалы</span> <br> Castles
-							img.blurred-card__img(src=img+"fast-links-img2.png", alt="")
-							a.blurred-card__link(href="#")
-								span Подробнее
-								+button-arrow
-						.blurred-card
-							.blurred-card__title Электронные кассиры
-							img.blurred-card__img(src=img+"fast-links-img3.png", alt="")
-							a.blurred-card__link(href="#")
-								span Подробнее
-								+button-arrow
-						.blurred-card
-							.blurred-card__title Дополнительное оборудование
-							img.blurred-card__img(src=img+"fast-links-img4.png", alt="")
-							a.blurred-card__link(href="#")
-								span Подробнее
-								+button-arrow
-						.blurred-card
-							.blurred-card__title Многофункциональные информационные <br> <span>терминалы</span>
-							img.blurred-card__img(src=img+"fast-links-img5.png", alt="")
-							a.blurred-card__link(href="#")
-								span Подробнее
-								+button-arrow
-				
-				section.fast-links
-					.container
-						.fast-links-block
-							.fast-links-caption
-								.fast-links-caption__title Услуги
-								.fast-links-caption__text <a href="#">Перейти к разделу услуги</a>
-						.blurred-card
-							.blurred-card__title Установка видеонаблюдения
-							img.blurred-card__img(src=img+"fast-links-img6.png", alt="")
-							a.blurred-card__link(href="#")
-								span Подробнее
-								+button-arrow
-						.blurred-card
-							.blurred-card__title Брендирование банкоматов
-							img.blurred-card__img(src=img+"fast-links-img7.png", alt="")
-							a.blurred-card__link(href="#")
-								span Подробнее
-								+button-arrow
-						.blurred-card
-							.blurred-card__title <span>Установка</span> NFC
-							img.blurred-card__img(src=img+"fast-links-img8.png", alt="")
-							a.blurred-card__link(href="#")
-								span Подробнее
-								+button-arrow
-						.blurred-card
-							.blurred-card__title <span>Установка</span> баркодов
-							img.blurred-card__img(src=img+"fast-links-img9.png", alt="")
-							a.blurred-card__link(href="#")
-								span Подробнее
-								+button-arrow
-						.blurred-card
-							.blurred-card__title <span>Установка</span> UPS
-							img.blurred-card__img(src=img+"fast-links-img10.png", alt="")
-							a.blurred-card__link(href="#")
-								span Подробнее
-								+button-arrow
-				
-				include ../blocks/about/about.pug
+			p 1s
 
 		include ../blocks/footer/footer.pug
 		include ../components/pug/scripts.pug

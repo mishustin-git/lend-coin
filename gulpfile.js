@@ -20,21 +20,18 @@ const uglify = require('gulp-uglify-es').default;
 const webpackStream = require('webpack-stream');
 const webp = require('gulp-webp');
 
-
-
 const path = {
 	markup: {
-		pugWhatch: './src/layout/**/*.pug',
-		pugCompile: './src/layout/pages/*.pug',
+		whatch: './src/layout/**/*.pug',
+		compile: './src/layout/pages/*.pug',
 		result: './app/'
 	},
 	styles: {
-		scssWhatch: './src/layout/**/*.{scss,sass}',
-		scssCompile: './src/layout/common/*.{scss,sass}',
+		whatch: './src/layout/**/*.{scss,sass}',
+		compile: './src/layout/common/*.{scss,sass}',
 		result: './app/css/',
 		libs: [
-			'./src/assets/libs/swiper/swiper-bundle.min.css',
-			'./src/assets/libs/tingle-master/tingle.min.css',
+			'./src/assets/libs/swiper/swiper-bundle.min.css'
 		]
 	},
 	scripts: {
@@ -42,9 +39,7 @@ const path = {
 		jsCompile: './src/layout/common/*.js',
 		result: './app/js/',
 		libs: [
-			'./src/assets/libs/swiper/swiper-bundle.min.js',
-			'./src/assets/libs/tingle-master/tingle.min.js',
-			'./src/assets/libs/Inputmask/inputmask.min.js'
+			'./src/assets/libs/swiper/swiper-bundle.min.js'
 		]
 	},
 	images: {
@@ -73,80 +68,59 @@ const path = {
 	}
 }
 
-// clean app directory before compile
+var cleanCSSOptions = {
+	compatibility: 'ie10',
+	format: 'beautify',
+	level: { 0: { specialComments: 0 } }
+}
+
+var gulpSassOptions = {
+	outputStyle: 'expanded',
+	sourceComments: true
+}
+
+// clean app
 const clean = () => {
 	return del(path.dirs.app)
 }
 exports.clean = clean;
+
 // clean prod directory before compile
 const cleanProd = () => {
 	return del(path.dirs.prod)
 }
-exports.clean = clean;
+exports.cleanProd = cleanProd;
 
 // Compile pug to html
-const pugCompiller = () => {
-	return src(path.markup.pugCompile)
-		.pipe(pug())
-		.pipe(formatHtml())
-		.pipe(dest(path.markup.result))
-		.pipe(browserSync.stream());
+const markupCompiller = () => {
+	return src(path.markup.compile) // find pug
+		.pipe(pug()) // compile to html
+		.pipe(formatHtml()) // make html beautiful
+		.pipe(dest(path.markup.result)) // paste html
+		.pipe(browserSync.stream()); // reload browser
 }
-exports.pugCompiller = pugCompiller;
+exports.markupCompiller = markupCompiller; // start task
 
-// Compile scss to css
-const scssCompiller = () => {
-	return src(path.styles.scssCompile)
-		.pipe(sourcemaps.init())
-		.pipe(sass().on('error', notify.onError()))
-		.pipe(autoprefixer({
-			overrideBrowserslist: ['last 2 versions'],
-			cascade: false
-		}))
-		.pipe(cleanCSS({
-			compatibility: 'ie10',
-			// format: {
-			// 	breaks: {
-			// 		afterAtRule: true,
-			// 		afterBlockBegins: true,
-			// 		afterBlockEnds: true,
-			// 		afterComment: true,
-			// 		afterProperty: true,
-			// 		afterRuleBegins: true,
-			// 		afterRuleEnds: true,
-			// 		beforeBlockEnds: true,
-			// 		betweenSelectors: true
-			// 	},
-			// 	breakWith: '\n',
-			// 	indentBy: 2,
-			// 	indentWith: 'space',
-			// 	spaces: {
-			// 		aroundSelectorRelation: false,
-			// 		beforeBlockBegins: false,
-			// 		beforeValue: true
-			// 	},
-			// 	wrapAt: false,
-			// 	semicolonAfterLastProperty: false
-			// }
-		}))
-		.pipe(rename(function (path) {
-			path.basename += ".min";
-		}))
-		.pipe(sourcemaps.write('.'))
-		.pipe(dest(path.styles.result))
-		.pipe(browserSync.stream())
+// Compile scss/sass to css
+const styleCompiller = () => {
+	return src(path.styles.compile) // find styles
+		.pipe(sourcemaps.init()) // start making styles map
+		.pipe(sass(gulpSassOptions).on('error', notify.onError())) // compile to css and show errors
+		.pipe(autoprefixer()) // add prefixes
+		.pipe(cleanCSS(cleanCSSOptions)) // remove garbage from css
+		.pipe(sourcemaps.write('.')) // finish making styles map
+		.pipe(dest(path.styles.result)) // output css
+		.pipe(browserSync.stream()) // reload browser
 }
-exports.scssCompiller = scssCompiller;
+exports.styleCompiller = styleCompiller;
 
 // Concat css libs
 const cssLibs = () => {
 	return src(path.styles.libs)
-		.pipe(concat('libs.min.css'), {
+		.pipe(concat('libs.css'), {
 			allowEmpty: true
 		})
-		.pipe(cleanCSS({
-			compatibility: 'ie10'
-		}))
+		.pipe(cleanCSS(cleanCSSOptions))
 		.pipe(dest(path.styles.result))
 		.pipe(browserSync.stream())
 }
@@ -243,13 +217,13 @@ const watchFiles = () => {
 			baseDir: "./app/"
 		}
 	});
-	watch(path.markup.pugWhatch, pugCompiller);
-	watch(path.styles.scssWhatch, scssCompiller);
-	watch(path.scripts.jsWhatch, jsCompiller);
-	watch(path.images.source, transferImg);
+	watch(path.markup.whatch, markupCompiller);
+	watch(path.styles.whatch, styleCompiller);
 	watch(path.styles.libs, cssLibs);
-	watch(path.scripts.libs, jsLibs);
-	watch(path.fonts.source, transferFonts);
+	// watch(path.scripts.jsWhatch, jsCompiller);
+	// watch(path.images.source, transferImg);
+	// watch(path.scripts.libs, jsLibs);
+	// watch(path.fonts.source, transferFonts);
 }
 exports.watchFiles = watchFiles;
 
@@ -260,7 +234,8 @@ exports.build = series(
 
 // Launch gulp - "gulp"
 exports.default = series(
-	clean,
-	parallel(scssCompiller, jsCompiller, cssLibs, jsLibs, pugCompiller, transferImg, transferFonts, transferFavicon),
+	clean, // clean app directory before compile
+	parallel(markupCompiller, styleCompiller, cssLibs),
+	// parallel( jsCompiller, jsLibs, markupCompiller, transferImg, transferFonts, transferFavicon),
 	watchFiles
 );
