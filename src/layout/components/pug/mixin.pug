@@ -1,0 +1,23 @@
+//- Page info
+mixin title(titleText)
+	title= titleText
+
+mixin desc(descText)
+	meta(name="description", content= descText)
+
+mixin breadcrumbs(breadcrumbsItems, breadcrumbsLast)
+	section.breadcrumbs
+		.container
+			ul.breadcrumbs-list
+				each item in breadcrumbsItems
+					li.breadcrumbs-list-item
+						// if breadcrumb is single
+						if (breadcrumbsItems.length === 1)
+							a(href="#").breadcrumbs-list__link= item
+						else
+							a(href="#").breadcrumbs-list__link= item
+				if breadcrumbsLast
+					li.breadcrumbs-list-item
+						a(href="#").breadcrumbs-list__link= breadcrumbsLast
+				else
+

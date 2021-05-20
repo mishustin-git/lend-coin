@@ -1,0 +1,25 @@
+body {
+	background: #fff;
+}
+
+.page {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.4;
+	font-family: $mainFont;
+	&-container {
+		width: 100%;
+	}
+}
+
+.container {
+	max-width: 1570px;
+	width: 100%;
+	margin: 0 auto;
+	@include max-screen(1650px) {
+		max-width: 1200px;
+	}
+	@include max-screen(1200px) {
+		padding: 0 15px;
+	}
+}
