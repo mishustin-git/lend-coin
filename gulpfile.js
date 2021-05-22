@@ -18,6 +18,8 @@ const concat = require('gulp-concat');
 const rename = require('gulp-rename');
 const uglify = require('gulp-uglify-es').default;
 const webpackStream = require('webpack-stream');
+const cache = require('gulp-cache');
+const imagemin = require('gulp-imagemin');
 const webp = require('gulp-webp');
 
 const path = {
@@ -43,10 +45,12 @@ const path = {
 		]
 	},
 	images: {
-		source: './src/layout/**/*.{jpg,jpeg,png,svg}',
-		result: './app/',
+		source: './src/layout/**/*.{jpg,jpeg,png,gif}',
+		// pngSource: './src/layout/**/*.png',
+		// jpgSource: './src/layout/**/*.{jpg,jpeg}',
+		// gifSource: './src/layout/**/*.gif',
 		svgSource: './src/layout/components/icons/',
-		svgResult: './app/img/icons/'
+		result: './app/',
 	},
 	fonts: {
 		source: './src/assets/fonts/**/*',
@@ -68,12 +72,12 @@ const path = {
 	}
 }
 
+// tasks options
 var cleanCSSOptions = {
 	compatibility: 'ie10',
 	format: 'beautify',
 	level: { 0: { specialComments: 0 } }
 }
-
 var gulpSassOptions = {
 	outputStyle: 'expanded',
 	sourceComments: true
@@ -90,6 +94,12 @@ const cleanProd = () => {
 	return del(path.dirs.prod)
 }
 exports.cleanProd = cleanProd;
+
+// clear cache
+const clearCache = () => {
+	return cache.clearAll();
+}
+exports.clearcache = clearCache;
 
 // Compile pug to html
 const markupCompiller = () => {
@@ -170,18 +180,28 @@ exports.jsLibs = jsLibs;
 
 // Transfer images to app directory
 const transferImg = () => {
-	return src(path.images.source)
-		// .pipe(webp())
-		// .pipe(rename(function (path) {
-		// 	path.dirname = "img/";
-		// }))
-		// .pipe(src(path.images.source))
-		.pipe(rename(function (path) {
-			path.dirname = "img/";
-		}))
-		.pipe(dest(path.images.result))
+	return src(path.images.source) // get images
+	.pipe(cache(imagemin({ // generate images cache and minify them
+		iterlaced: true
+	})))
+	.pipe(rename(function (path) { // change path
+		path.dirname = "img/";
+	}))
+	// .pipe(webp()) // generate webp format
+	.pipe(dest(path.images.result)) // paste images
 }
-exports.transferImg = transferImg;
+exports.transferimg = transferImg;
+
+// Generate webp
+const generateWebp = () => {
+	return src(path.images.source) // get images
+	.pipe(rename(function (path) { // change path
+		path.dirname = "img/webp/";
+	}))
+	.pipe(webp()) // generate webp format
+	.pipe(dest(path.images.result)) // paste images
+}
+exports.generatewebp = generateWebp;
 
 // Transfer fonts
 const transferFonts = () => {
@@ -189,6 +209,7 @@ const transferFonts = () => {
 		.pipe(dest(path.fonts.result))
 }
 exports.transferFonts = transferFonts;
+
 // Transfer favicon
 const transferFavicon = () => {
 	return src(path.favicon.source)
@@ -235,7 +256,7 @@ exports.build = series(
 // Launch gulp - "gulp"
 exports.default = series(
 	clean, // clean app directory before compile
-	parallel(markupCompiller, styleCompiller, cssLibs),
-	// parallel( jsCompiller, jsLibs, markupCompiller, transferImg, transferFonts, transferFavicon),
+	parallel(markupCompiller, styleCompiller, cssLibs, transferImg, generateWebp),
+	// parallel( jsCompiller, jsLibs, markupCompiller, transferFonts, transferFavicon),
 	watchFiles
 );
