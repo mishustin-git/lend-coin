@@ -21,6 +21,7 @@ const webpackStream = require('webpack-stream');
 const cache = require('gulp-cache');
 const imagemin = require('gulp-imagemin');
 const webp = require('gulp-webp');
+const spritesmith = require('gulp.spritesmith');
 
 const path = {
 	markup: {
@@ -46,8 +47,8 @@ const path = {
 	},
 	images: {
 		source: './src/layout/**/*.{jpg,jpeg,png,gif}',
-		svgSource: './src/layout/**/*.svg',
-		// svgSource: './src/layout/components/icons/',
+		svgSource: './src/layout/components/icons/svg/*.svg',
+		pngSource: './src/layout/components/icons/png/*.png',
 		result: './app/',
 	},
 	fonts: {
@@ -79,6 +80,10 @@ var cleanCSSOptions = {
 var gulpSassOptions = {
 	outputStyle: 'expanded',
 	sourceComments: true
+}
+var pngSpriteOptions = {
+	imgName: 'sprite.png',
+	cssName: 'sprite.css'
 }
 
 // clean app
@@ -201,6 +206,17 @@ const generateWebp = () => {
 	.pipe(dest(path.images.result)) // paste images
 }
 exports.generatewebp = generateWebp;
+
+// Generate png sprite
+const generatePngSprite = () => {
+	return src(path.images.pngSource) // get images
+	.pipe(spritesmith(pngSpriteOptions)) // generate sprite
+	.pipe(rename(function (path) { // change path
+		path.dirname = "img/";
+	}))
+	.pipe(dest(path.images.result)) // paste images
+}
+exports.generatepngsprite = generatePngSprite;
 
 // Transfer fonts
 const transferFonts = () => {

@@ -28,6 +28,7 @@
     "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify-es": "^2.0.0",
     "gulp-webp": "^4.0.1",
+    "gulp.spritesmith": "^6.12.1",
     "webpack": "^5.25.0",
     "webpack-stream": "^6.1.2"
   }
