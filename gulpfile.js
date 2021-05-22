@@ -46,10 +46,8 @@ const path = {
 	},
 	images: {
 		source: './src/layout/**/*.{jpg,jpeg,png,gif}',
-		// pngSource: './src/layout/**/*.png',
-		// jpgSource: './src/layout/**/*.{jpg,jpeg}',
-		// gifSource: './src/layout/**/*.gif',
-		svgSource: './src/layout/components/icons/',
+		svgSource: './src/layout/**/*.svg',
+		// svgSource: './src/layout/components/icons/',
 		result: './app/',
 	},
 	fonts: {
@@ -89,11 +87,11 @@ const clean = () => {
 }
 exports.clean = clean;
 
-// clean prod directory before compile
+// clean prod directory
 const cleanProd = () => {
 	return del(path.dirs.prod)
 }
-exports.cleanProd = cleanProd;
+exports.cleanprod = cleanProd;
 
 // clear cache
 const clearCache = () => {
@@ -109,7 +107,7 @@ const markupCompiller = () => {
 		.pipe(dest(path.markup.result)) // paste html
 		.pipe(browserSync.stream()); // reload browser
 }
-exports.markupCompiller = markupCompiller; // start task
+exports.markupcompiller = markupCompiller; // start task
 
 // Compile scss/sass to css
 const styleCompiller = () => {
@@ -122,7 +120,7 @@ const styleCompiller = () => {
 		.pipe(dest(path.styles.result)) // output css
 		.pipe(browserSync.stream()) // reload browser
 }
-exports.styleCompiller = styleCompiller;
+exports.stylecompiller = styleCompiller;
 
 // Concat css libs
 const cssLibs = () => {
@@ -134,7 +132,7 @@ const cssLibs = () => {
 		.pipe(dest(path.styles.result))
 		.pipe(browserSync.stream())
 }
-exports.cssLibs = cssLibs;
+exports.csslibs = cssLibs;
 
 // Compile js
 const jsCompiller = () => {
@@ -164,7 +162,7 @@ const jsCompiller = () => {
 		.pipe(dest(path.scripts.result))
 		.pipe(browserSync.stream())
 }
-exports.jsCompiller = jsCompiller;
+exports.jscompiller = jsCompiller;
 
 // Concat js libs
 const jsLibs = () => {
@@ -176,18 +174,19 @@ const jsLibs = () => {
 		.pipe(dest(path.scripts.result))
 		.pipe(browserSync.stream())
 }
-exports.jsLibs = jsLibs;
+exports.jslibs = jsLibs;
 
-// Transfer images to app directory
+// Transfer images
 const transferImg = () => {
 	return src(path.images.source) // get images
 	.pipe(cache(imagemin({ // generate images cache and minify them
-		iterlaced: true
+		iterlaced: true,
+		progressive: true,
+		use: [pngquant()]
 	})))
 	.pipe(rename(function (path) { // change path
 		path.dirname = "img/";
 	}))
-	// .pipe(webp()) // generate webp format
 	.pipe(dest(path.images.result)) // paste images
 }
 exports.transferimg = transferImg;
@@ -208,21 +207,21 @@ const transferFonts = () => {
 	return src(path.fonts.source)
 		.pipe(dest(path.fonts.result))
 }
-exports.transferFonts = transferFonts;
+exports.transferfonts = transferFonts;
 
 // Transfer favicon
 const transferFavicon = () => {
 	return src(path.favicon.source)
 		.pipe(dest(path.favicon.result))
 }
-exports.transferFavicon = transferFavicon;
+exports.transferfavicon = transferFavicon;
 
 // Transfer files
 const transferFiles = () => {
 	return src(path.files.source)
 		.pipe(dest(path.files.result))
 }
-exports.transferFiles = transferFiles;
+exports.transferfiles = transferFiles;
 
 // Transfer files to build
 const prod = () => {
@@ -243,6 +242,8 @@ const watchFiles = () => {
 	watch(path.styles.libs, cssLibs);
 	watch(path.images.source, transferImg);
 	watch(path.images.source, generateWebp);
+	watch(path.favicon.source, transferFavicon);
+	watch(path.files.source, transferFiles);
 	// watch(path.scripts.jsWhatch, jsCompiller);
 	// watch(path.scripts.libs, jsLibs);
 	// watch(path.fonts.source, transferFonts);
@@ -257,7 +258,7 @@ exports.build = series(
 // Launch gulp - "gulp"
 exports.default = series(
 	clean, // clean app directory before compile
-	parallel(markupCompiller, styleCompiller, cssLibs, transferImg, generateWebp),
-	// parallel( jsCompiller, jsLibs, markupCompiller, transferFonts, transferFavicon),
+	parallel(markupCompiller, styleCompiller, cssLibs, transferImg, generateWebp, transferFavicon, transferFiles),
+	// parallel(jsCompiller, jsLibs, transferFonts),
 	watchFiles
 );
