@@ -241,8 +241,9 @@ const watchFiles = () => {
 	watch(path.markup.whatch, markupCompiller);
 	watch(path.styles.whatch, styleCompiller);
 	watch(path.styles.libs, cssLibs);
+	watch(path.images.source, transferImg);
+	watch(path.images.source, generateWebp);
 	// watch(path.scripts.jsWhatch, jsCompiller);
-	// watch(path.images.source, transferImg);
 	// watch(path.scripts.libs, jsLibs);
 	// watch(path.fonts.source, transferFonts);
 }
