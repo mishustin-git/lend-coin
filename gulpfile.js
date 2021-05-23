@@ -80,7 +80,7 @@ const path = {
 	},
 	dirs: {
 		src: './src/',
-		app: './app/**/*',
+		app: './app/',
 		prod: './prod/'
 	}
 }
@@ -115,7 +115,7 @@ var svgSpriteOptions = {
 	},
 }
 
-// Clear app
+// Clear app directory
 const clearApp = () => {
 	return del(path.dirs.app)
 }
@@ -127,13 +127,13 @@ const clearProd = () => {
 }
 exports.clearprod = clearProd;
 
-// Clear cache
+// Clear cache of images etc.
 const clearCache = () => {
 	return cache.clearAll();
 }
 exports.clearcache = clearCache;
 
-// Compile pug to html
+// Compile pug to html to app directory
 const markupCompiller = () => {
 	return src(path.markup.compile) // find pug
 		.pipe(pug()) // compile to html
@@ -143,7 +143,7 @@ const markupCompiller = () => {
 }
 exports.markupcompiller = markupCompiller; // start task
 
-// Compile scss/sass to css
+// Compile scss/sass to css to app directory
 const styleCompiller = () => {
 	return src(path.styles.compile) // find styles
 		.pipe(sourcemaps.init()) // start making styles map
@@ -156,7 +156,7 @@ const styleCompiller = () => {
 }
 exports.stylecompiller = styleCompiller;
 
-// Concat css libs
+// Concat css libs to app directory
 const cssLibs = () => {
 	return src(path.styles.libs)
 		.pipe(concat('libs.min.css'), {
@@ -168,7 +168,7 @@ const cssLibs = () => {
 }
 exports.csslibs = cssLibs;
 
-// Compile js
+// Compile js to app directory
 const jsCompiller = () => {
 	return src(path.scripts.compile)
 		.pipe(webpackStream({
@@ -199,7 +199,7 @@ const jsCompiller = () => {
 }
 exports.jscompiller = jsCompiller;
 
-// Concat js libs
+// Concat js libs to app directory
 const jsLibs = () => {
 	return src(path.scripts.libs)
 		.pipe(concat('libs.min.js'), {
@@ -211,7 +211,7 @@ const jsLibs = () => {
 }
 exports.jslibs = jsLibs;
 
-// Transfer images
+// Transfer images to app directory
 const transferImg = () => {
 	return src(path.images.source) // get images
 	.pipe(cache(imagemin(imageminOptions))) // generate images cache and minify them
@@ -222,7 +222,7 @@ const transferImg = () => {
 }
 exports.transferimg = transferImg;
 
-// Generate webp
+// Generate webp to app directory
 const generateWebp = () => {
 	return src(path.images.source) // get images
 	.pipe(webp()) // generate webp format
@@ -234,7 +234,7 @@ const generateWebp = () => {
 }
 exports.generatewebp = generateWebp;
 
-// Generate png sprite
+// Generate png sprite to app directory
 const generatePngSprite = () => {
 	var spriteData = 
 		src(path.images.pngSource)
@@ -255,7 +255,7 @@ const generatePngSprite = () => {
 }
 exports.generatepngsprite = generatePngSprite;
 
-// Generate svg sprite
+// Generate svg sprite to app directory
 const generateSvgSprite = () => {
 	return src(path.images.svgSource) // svg files for sprite
 		.pipe(svgSprite(svgSpriteOptions))
@@ -266,21 +266,21 @@ const generateSvgSprite = () => {
 }
 exports.generatesvgsprite = generateSvgSprite;
 
-// Transfer fonts
+// Transfer fonts to app directory
 const transferFonts = () => {
 	return src(path.fonts.source)
 		.pipe(dest(path.fonts.result))
 }
 exports.transferfonts = transferFonts;
 
-// Transfer favicon
+// Transfer favicon to app directory
 const transferFavicon = () => {
 	return src(path.favicon.source)
 		.pipe(dest(path.favicon.result))
 }
 exports.transferfavicon = transferFavicon;
 
-// Transfer files
+// Transfer files to app directory
 const transferFiles = () => {
 	return src(path.files.source)
 		.pipe(dest(path.files.result))
@@ -288,13 +288,13 @@ const transferFiles = () => {
 exports.transferfiles = transferFiles;
 
 // Transfer files to build
-const prod = () => {
-	return src(path.dirs.app)
-		.pipe(dest(path.dirs.prod))
-}
-exports.prod = prod;
+// const prod = () => {
+// 	return src(path.dirs.app)
+// 		.pipe(dest(path.dirs.prod))
+// }
+// exports.prod = prod;
 
-// Whatching task
+// Whatching task for app directory
 const watchFiles = () => {
 	browserSync.init({
 		server: {
@@ -312,19 +312,19 @@ const watchFiles = () => {
 	watch(path.files.source, transferFiles);
 	watch(path.scripts.libs, jsLibs);
 	watch(path.scripts.watch, jsCompiller);
-	// watch(path.fonts.source, transferFonts);
+	watch(path.fonts.source, transferFonts);
 }
 exports.watchFiles = watchFiles;
 
+// Generate production directory
 exports.build = series(
 	clearProd,
-	prod
+	// prod
 );
 
 // Launch gulp - "gulp"
 exports.default = series(
-	clearApp, // clean app directory before compile
-	parallel(markupCompiller, styleCompiller, jsCompiller, cssLibs, jsLibs, transferImg, generateWebp, transferFavicon, transferFiles, generatePngSprite, generateSvgSprite),
-	// parallel( transferFonts),
+	clearApp,
+	parallel(markupCompiller, styleCompiller, jsCompiller, cssLibs, jsLibs, transferImg, generateWebp, transferFavicon, transferFiles, generatePngSprite, generateSvgSprite, transferFonts),
 	watchFiles
 );
