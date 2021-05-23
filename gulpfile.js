@@ -24,6 +24,7 @@ const webp = require('gulp-webp');
 const spritesmith = require('gulp.spritesmith');
 const buffer = require('vinyl-buffer');
 const merge = require('merge-stream');
+const svgSprite = require('gulp-svg-sprite');
 
 const path = {
 	markup: {
@@ -85,18 +86,23 @@ var gulpSassOptions = {
 	sourceComments: true
 }
 var pngSpriteOptions = {
-	imgName: 'pngsprite.png',
-	imgPath: '../img/sprite/pngsprite.png',
-	cssName: 'pngsprite.css',
-
+	imgName: 'sprite.png',
+	imgPath: '../img/sprite/sprite.png',
+	cssName: 'sprite.css',
 	retinaSrcFilter: path.images.pngSource2x,
-	retinaImgName: 'pngsprite@2x.png',
-	retinaImgPath: '../img/sprite/pngsprite@2x.png',
-
+	retinaImgName: 'sprite@2x.png',
+	retinaImgPath: '../img/sprite/sprite@2x.png',
 	padding: 5
 }
 var imageminOptions = {
 	iterlaced: true
+}
+var svgSpriteOptions = {
+	mode: {
+		stack: {
+			sprite: "sprite.svg"  //sprite file name
+		}
+	},
 }
 
 // Clear app
@@ -239,6 +245,15 @@ const generatePngSprite = () => {
 exports.generatepngsprite = generatePngSprite;
 
 // Generate svg sprite
+const generateSvgSprite = () => {
+	return src(path.images.svgSource) // svg files for sprite
+		.pipe(svgSprite(svgSpriteOptions))
+		.pipe(rename(function (path) { // change path
+			path.dirname = "img/sprite";
+		}))
+		.pipe(dest(path.images.result));
+}
+exports.generatesvgsprite = generateSvgSprite;
 
 // Transfer fonts
 const transferFonts = () => {
