@@ -5,19 +5,24 @@ const {
 	parallel,
 	watch
 } = require('gulp');
+// pug - html
 const pug = require('gulp-pug');
 const formatHtml = require('gulp-format-html');
-const del = require('del');
-const browserSync = require('browser-sync').create();
+// sass - css
 const sass = require('gulp-sass');
 const cleanCSS = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
+// system
+const del = require('del');
+const browserSync = require('browser-sync').create();
 const notify = require('gulp-notify');
 const concat = require('gulp-concat');
 const rename = require('gulp-rename');
+// js
 const uglify = require('gulp-uglify-es').default;
 const webpackStream = require('webpack-stream');
+// images
 const cache = require('gulp-cache');
 const imagemin = require('gulp-imagemin');
 const webp = require('gulp-webp');
@@ -43,8 +48,8 @@ const path = {
 		]
 	},
 	scripts: {
-		jsWhatch: './src/layout/**/*.js',
-		jsCompile: './src/layout/common/*.js',
+		watch: './src/layout/**/*.js',
+		compile: './src/layout/common/*.js',
 		result: './app/js/',
 		libs: [
 			'./src/assets/libs/Inputmask/inputmask.min.js', // telephone mask
@@ -54,7 +59,7 @@ const path = {
 		]
 	},
 	images: {
-		source: './src/layout/**/*.{jpg,jpeg,png,gif}',
+		source: ['./src/layout/**/*.{jpg,jpeg,png,gif}', '!./src/layout/common/img/icons/**/*.{jpg,jpeg,png,gif}'],
 		svgSource: './src/layout/common/img/icons/svg/*.svg',
 		pngSource: './src/layout/common/img/icons/png/*.png',
 		pngSource2x: './src/layout/common/img/icons/png/*-2x.png',
@@ -154,7 +159,7 @@ exports.stylecompiller = styleCompiller;
 // Concat css libs
 const cssLibs = () => {
 	return src(path.styles.libs)
-		.pipe(concat('libs.css'), {
+		.pipe(concat('libs.min.css'), {
 			allowEmpty: true
 		})
 		.pipe(cleanCSS())
@@ -165,10 +170,11 @@ exports.csslibs = cssLibs;
 
 // Compile js
 const jsCompiller = () => {
-	return src(path.scripts.jsCompile)
+	return src(path.scripts.compile)
 		.pipe(webpackStream({
+			mode: 'none', // development production
 			output: {
-				filename: 'common.min.js'
+				filename: 'common.js'
 			},
 			module: {
 				rules: [{
@@ -187,7 +193,7 @@ const jsCompiller = () => {
 				}]
 			}
 		}))
-		.pipe(uglify().on("error", notify.onError()))
+		// .pipe(uglify().on("error", notify.onError()))
 		.pipe(dest(path.scripts.result))
 		.pipe(browserSync.stream())
 }
@@ -219,11 +225,11 @@ exports.transferimg = transferImg;
 // Generate webp
 const generateWebp = () => {
 	return src(path.images.source) // get images
+	.pipe(webp()) // generate webp format
+	.pipe(cache(imagemin(imageminOptions))) // generate images cache and minify them
 	.pipe(rename(function (path) { // change path
 		path.dirname = "img/webp/";
 	}))
-	.pipe(webp()) // generate webp format
-	.pipe(cache(imagemin(imageminOptions))) // generate images cache and minify them
 	.pipe(dest(path.images.result)) // paste images
 }
 exports.generatewebp = generateWebp;
@@ -304,8 +310,8 @@ const watchFiles = () => {
 	watch(path.images.svgSource, generateSvgSprite);
 	watch(path.favicon.source, transferFavicon);
 	watch(path.files.source, transferFiles);
-	// watch(path.scripts.jsWhatch, jsCompiller);
-	// watch(path.scripts.libs, jsLibs);
+	watch(path.scripts.libs, jsLibs);
+	watch(path.scripts.watch, jsCompiller);
 	// watch(path.fonts.source, transferFonts);
 }
 exports.watchFiles = watchFiles;
@@ -318,7 +324,7 @@ exports.build = series(
 // Launch gulp - "gulp"
 exports.default = series(
 	clearApp, // clean app directory before compile
-	parallel(markupCompiller, styleCompiller, cssLibs, transferImg, generateWebp, transferFavicon, transferFiles, generatePngSprite, generateSvgSprite),
-	// parallel(jsCompiller, jsLibs, transferFonts),
+	parallel(markupCompiller, styleCompiller, jsCompiller, cssLibs, jsLibs, transferImg, generateWebp, transferFavicon, transferFiles, generatePngSprite, generateSvgSprite),
+	// parallel( transferFonts),
 	watchFiles
 );
