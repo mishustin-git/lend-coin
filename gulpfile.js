@@ -172,7 +172,7 @@ exports.csslibs = cssLibs;
 const jsCompiller = () => {
 	return src(path.scripts.compile)
 		.pipe(webpackStream({
-			mode: 'none', // development production
+			mode: 'none', // development production none
 			output: {
 				filename: 'common.js'
 			},
@@ -287,13 +287,6 @@ const transferFiles = () => {
 }
 exports.transferfiles = transferFiles;
 
-// Transfer files to build
-// const prod = () => {
-// 	return src(path.dirs.app)
-// 		.pipe(dest(path.dirs.prod))
-// }
-// exports.prod = prod;
-
 // Whatching task for app directory
 const watchFiles = () => {
 	browserSync.init({
@@ -316,15 +309,70 @@ const watchFiles = () => {
 }
 exports.watchFiles = watchFiles;
 
-// Generate production directory
-exports.build = series(
-	clearProd,
-	// prod
-);
-
 // Launch gulp - "gulp"
 exports.default = series(
 	clearApp,
 	parallel(markupCompiller, styleCompiller, jsCompiller, cssLibs, jsLibs, transferImg, generateWebp, transferFavicon, transferFiles, generatePngSprite, generateSvgSprite, transferFonts),
 	watchFiles
+);
+
+
+// TASKS FOR PRODUCTION DIRECTORY
+// Transfer css files to build
+const prodStyles = () => {
+	return src('./app/css/common.css')
+		.pipe(cleanCSS()) // minify css
+		.pipe(rename(function (path) { // change path
+			path.extname = ".min.css";
+		}))
+		.pipe(dest('./prod/css/'))
+}
+exports.prodstyles = prodStyles;
+
+// Transfer js files to build
+const prodScripts = () => {
+	return src('./app/js/common.js')
+		.pipe(webpackStream({
+			mode: 'production', // development production none
+			output: {
+				filename: 'common.min.js'
+			},
+			module: {
+				rules: [{
+					test: /\.m?js$/,
+					exclude: /node_modules|bower_components/,
+					use: {
+						loader: 'babel-loader',
+						options: {
+							presets: [
+								['@babel/preset-env', {
+									targets: "defaults"
+								}]
+							]
+						}
+					}
+				}]
+			}
+		}))
+		.pipe(uglify())
+		.pipe(dest('./prod/js/'))
+}
+exports.prodscripts = prodScripts;
+
+// Transfer files to build
+const prod = () => {
+	return src([
+		'./app/**/*',
+		'!./app/css/common.css', '!./app/css/*.map', '!./app/js/common.js',
+	])
+	.pipe(dest(path.dirs.prod))
+}
+exports.prod = prod;
+
+// Generate production directory
+exports.build = series(
+	clearProd,
+	prod,
+	prodStyles,
+	prodScripts
 );
