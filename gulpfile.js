@@ -37,7 +37,9 @@ const path = {
 		compile: './src/layout/common/*.{scss,sass}',
 		result: './app/css/',
 		libs: [
-			'./src/assets/libs/swiper/swiper-bundle.min.css'
+			'./src/assets/libs/swiper/swiper-bundle.min.css', // slider
+			'./src/assets/libs/tingle-master/tingle.min.css', // modal windows
+			'./src/assets/libs/spotlight/spotlight.min.css' // gallery like fancybox
 		]
 	},
 	scripts: {
@@ -45,14 +47,17 @@ const path = {
 		jsCompile: './src/layout/common/*.js',
 		result: './app/js/',
 		libs: [
-			'./src/assets/libs/swiper/swiper-bundle.min.js'
+			'./src/assets/libs/Inputmask/inputmask.min.js', // telephone mask
+			'./src/assets/libs/swiper/swiper-bundle.min.js', // slider
+			'./src/assets/libs/tingle-master/tingle.min.js', // modal windows
+			'./src/assets/libs/spotlight/spotlight.min.js' // gallery like fancybox
 		]
 	},
 	images: {
 		source: './src/layout/**/*.{jpg,jpeg,png,gif}',
 		svgSource: './src/layout/common/img/icons/svg/*.svg',
 		pngSource: './src/layout/common/img/icons/png/*.png',
-		pngSource2x: './src/layout/common/img/icons/png/*@2x.png',
+		pngSource2x: './src/layout/common/img/icons/png/*-2x.png',
 		result: './app/',
 	},
 	fonts: {
@@ -90,8 +95,8 @@ var pngSpriteOptions = {
 	imgPath: '../img/sprite/sprite.png',
 	cssName: 'sprite.css',
 	retinaSrcFilter: path.images.pngSource2x,
-	retinaImgName: 'sprite@2x.png',
-	retinaImgPath: '../img/sprite/sprite@2x.png',
+	retinaImgName: 'sprite-2x.png',
+	retinaImgPath: '../img/sprite/sprite-2x.png',
 	padding: 5
 }
 var imageminOptions = {
@@ -152,7 +157,7 @@ const cssLibs = () => {
 		.pipe(concat('libs.css'), {
 			allowEmpty: true
 		})
-		.pipe(cleanCSS(cleanCSSOptions))
+		.pipe(cleanCSS())
 		.pipe(dest(path.styles.result))
 		.pipe(browserSync.stream())
 }
@@ -296,6 +301,7 @@ const watchFiles = () => {
 	watch(path.images.source, transferImg);
 	watch(path.images.source, generateWebp);
 	watch(path.images.pngSource, generatePngSprite);
+	watch(path.images.svgSource, generateSvgSprite);
 	watch(path.favicon.source, transferFavicon);
 	watch(path.files.source, transferFiles);
 	// watch(path.scripts.jsWhatch, jsCompiller);
@@ -312,7 +318,7 @@ exports.build = series(
 // Launch gulp - "gulp"
 exports.default = series(
 	clearApp, // clean app directory before compile
-	parallel(markupCompiller, styleCompiller, cssLibs, transferImg, generateWebp, transferFavicon, transferFiles, generatePngSprite),
+	parallel(markupCompiller, styleCompiller, cssLibs, transferImg, generateWebp, transferFavicon, transferFiles, generatePngSprite, generateSvgSprite),
 	// parallel(jsCompiller, jsLibs, transferFonts),
 	watchFiles
 );
