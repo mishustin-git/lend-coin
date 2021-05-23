@@ -22,6 +22,8 @@ const cache = require('gulp-cache');
 const imagemin = require('gulp-imagemin');
 const webp = require('gulp-webp');
 const spritesmith = require('gulp.spritesmith');
+const buffer = require('vinyl-buffer');
+const merge = require('merge-stream');
 
 const path = {
 	markup: {
@@ -47,8 +49,9 @@ const path = {
 	},
 	images: {
 		source: './src/layout/**/*.{jpg,jpeg,png,gif}',
-		svgSource: './src/layout/components/icons/svg/*.svg',
-		pngSource: './src/layout/components/icons/png/*.png',
+		svgSource: './src/layout/common/img/icons/svg/*.svg',
+		pngSource: './src/layout/common/img/icons/png/*.png',
+		pngSource2x: './src/layout/common/img/icons/png/*@2x.png',
 		result: './app/',
 	},
 	fonts: {
@@ -82,23 +85,33 @@ var gulpSassOptions = {
 	sourceComments: true
 }
 var pngSpriteOptions = {
-	imgName: 'sprite.png',
-	cssName: 'sprite.css'
+	imgName: 'pngsprite.png',
+	imgPath: '../img/sprite/pngsprite.png',
+	cssName: 'pngsprite.css',
+
+	retinaSrcFilter: path.images.pngSource2x,
+	retinaImgName: 'pngsprite@2x.png',
+	retinaImgPath: '../img/sprite/pngsprite@2x.png',
+
+	padding: 5
+}
+var imageminOptions = {
+	iterlaced: true
 }
 
-// clean app
-const clean = () => {
+// Clear app
+const clearApp = () => {
 	return del(path.dirs.app)
 }
-exports.clean = clean;
+exports.clearapp = clearApp;
 
-// clean prod directory
-const cleanProd = () => {
+// Clear prod directory
+const clearProd = () => {
 	return del(path.dirs.prod)
 }
-exports.cleanprod = cleanProd;
+exports.clearprod = clearProd;
 
-// clear cache
+// Clear cache
 const clearCache = () => {
 	return cache.clearAll();
 }
@@ -184,11 +197,7 @@ exports.jslibs = jsLibs;
 // Transfer images
 const transferImg = () => {
 	return src(path.images.source) // get images
-	.pipe(cache(imagemin({ // generate images cache and minify them
-		iterlaced: true,
-		progressive: true,
-		use: [pngquant()]
-	})))
+	.pipe(cache(imagemin(imageminOptions))) // generate images cache and minify them
 	.pipe(rename(function (path) { // change path
 		path.dirname = "img/";
 	}))
@@ -203,20 +212,33 @@ const generateWebp = () => {
 		path.dirname = "img/webp/";
 	}))
 	.pipe(webp()) // generate webp format
+	.pipe(cache(imagemin(imageminOptions))) // generate images cache and minify them
 	.pipe(dest(path.images.result)) // paste images
 }
 exports.generatewebp = generateWebp;
 
 // Generate png sprite
 const generatePngSprite = () => {
-	return src(path.images.pngSource) // get images
-	.pipe(spritesmith(pngSpriteOptions)) // generate sprite
-	.pipe(rename(function (path) { // change path
-		path.dirname = "img/";
-	}))
-	.pipe(dest(path.images.result)) // paste images
+	var spriteData = 
+		src(path.images.pngSource)
+		.pipe(spritesmith(pngSpriteOptions));
+
+	var imgStream = spriteData.img
+		.pipe(buffer())
+		.pipe(imagemin(imageminOptions))
+		.pipe(rename(function (path) { // change path
+			path.dirname = "img/sprite";
+		}))
+		.pipe(dest(path.images.result));
+
+	var cssStream = spriteData.css
+		.pipe(dest(path.styles.result));
+
+	return merge(imgStream, cssStream);
 }
 exports.generatepngsprite = generatePngSprite;
+
+// Generate svg sprite
 
 // Transfer fonts
 const transferFonts = () => {
@@ -258,6 +280,7 @@ const watchFiles = () => {
 	watch(path.styles.libs, cssLibs);
 	watch(path.images.source, transferImg);
 	watch(path.images.source, generateWebp);
+	watch(path.images.pngSource, generatePngSprite);
 	watch(path.favicon.source, transferFavicon);
 	watch(path.files.source, transferFiles);
 	// watch(path.scripts.jsWhatch, jsCompiller);
@@ -267,14 +290,14 @@ const watchFiles = () => {
 exports.watchFiles = watchFiles;
 
 exports.build = series(
-	cleanProd,
+	clearProd,
 	prod
 );
 
 // Launch gulp - "gulp"
 exports.default = series(
-	clean, // clean app directory before compile
-	parallel(markupCompiller, styleCompiller, cssLibs, transferImg, generateWebp, transferFavicon, transferFiles),
+	clearApp, // clean app directory before compile
+	parallel(markupCompiller, styleCompiller, cssLibs, transferImg, generateWebp, transferFavicon, transferFiles, generatePngSprite),
 	// parallel(jsCompiller, jsLibs, transferFonts),
 	watchFiles
 );
