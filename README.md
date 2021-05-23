@@ -8,6 +8,7 @@
 * [Styleguide SCSS](#styleguidCss)
 * [Полезные плагины JS](#pluginsjs)
 * [Полезные плагины jQuery](#pluginsjquery)
+* [Полезная информация](#useful)
 
 ## NPM <span id="npm"></span>
 Команды NPM для работы с проектом
@@ -74,6 +75,66 @@ ___
 ## Структура папок <span id="directory"></span>
 Описание структуры папок проекта и правила расположения файлов
 ___
+* app
+	* 
+	* 
+	* 
+	* 
+* node_modules
+* prod
+* src
+	* assets
+		* favicon
+			* файлы генерировать с помощью сервиса https://realfavicongenerator.net/
+		* files
+			* разнообразные файлы (.doc .pdf и т.д.)
+		* fonts
+			* папка с названием шрифта
+				* все файлы генерировать с помощью сервиса https://transfonter.org/ или аналогичного
+		* libs
+			* папка с названием плагина
+				* название.js
+				* название.css
+	* layout
+		* blocks
+			* имя_блока
+				* img
+					* картинки данного блока
+				* имя_блока.pug
+				* имя_блока.scss
+		* common
+			* img
+				* png
+					* иконки для png спрайтов
+				* svg
+					* иконки для svg спрайта
+			* common.js
+			* common.scss
+		* components
+			* pug
+				* buttons.pug
+				* codes.pug
+				* links.pug
+				* meta.pug
+				* mixin.pug
+				* scripts.pug
+				* vars.pug
+			* scss
+				* buttons.scss
+				* colors.scss
+				* general.scss
+				* media.scss
+				* mixin.scss
+				* reset.scss
+				* text-container.scss
+				* vars.scss
+		* pages
+			* index.pug
+* .gitignore
+* gulpfile.js
+* package-lock.json
+* package.json
+* README.md
 ## Styleguide разметки <span id="styleguidePug"></span>
 Описание стиля написания разметки PUG
 ___
@@ -102,5 +163,9 @@ ___
 * __[niceselect](https://jqueryniceselect.hernansartorio.com/)__ - кастомизация select
 * __[twentytwenty](https://github.com/zurb/twentytwenty)__ - плагин сравнения 2х картинок
 * __[ion.rangeSlider](http://ionden.com/a/plugins/ion.rangeSlider/)__ - плагин ползунка выбора цены и т.д.
+
+## Полезная иформация <span id="useful"></span>
+* при генерации 2x спрайта png все 2x картинки должны быть ровно на два увеличены что бы не было ошибок при работе таска
+* для генерации правильного svg спрайта при выгрузке иконки из фигмы надо применить flatten для нее. Иконка должна быть из одного слоя.
 
 [Вверх](#pageStart)
