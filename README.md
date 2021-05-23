@@ -1,11 +1,13 @@
 <span id="pageStart"></span>
-# Стартовый проект Gulp для верстки
+# Стартовый проект Gulp 4 для верстки
 
 * [NPM](#npm)
 * [Gulp](#gulp)
 * [Структура папок](#directory)
-* [Styleguide разметки](#styleguidePug)
-* [Styleguide стилей](#styleguidCss)
+* [Styleguide PUG](#styleguidePug)
+* [Styleguide SCSS](#styleguidCss)
+* [Полезные плагины JS](#pluginsjs)
+* [Полезные плагины jQuery](#pluginsjquery)
 
 ## NPM <span id="npm"></span>
 Команды NPM для работы с проектом
@@ -39,30 +41,38 @@ ___
 Для работы сборки после установки Node.js необходимо установить глобально сам Gulp, командой __npm install gulp -g__
 ### Команды:
 * __gulp__ - запускает сборку
+* __gulp csslibs__ - формирование файла с плагинами libs.min.css. Пути к файлам прописываются в gulpfile.js в одноименном таске.
+* __gulp jslibs__ - формирование файла с плагинами libs.min.js. Пути к файлам прописываются в gulpfile.js в одноименном таске.
+* __gulp clearapp__ - удалить папку app
+* __gulp clearprod__ - удалить папку prod
+* __gulp build__ - формирование папки продакшена (prod)
 * __gulp имя_таска__ - запустит конкретный таск. Например компиляция Pug в HTML
 ### Используемые плагины:
-* __[gulp-pug]()__ - 
-* __[gulp-format-html]()__ - 
-* __[del]()__ - 
-* __[browser-sync]()__ - 
-* __[gulp-sass]()__ - 
-* __[gulp-clean-css]()__ - 
-* __[gulp-sourcemaps]()__ - 
-* __[gulp-autoprefixer]()__ - 
-* __[gulp-notify]()__ - 
-* __[gulp-concat]()__ - 
-* __[gulp-rename]()__ - 
-* __[gulp-uglify-es]()__ - 
-* __[webpack-stream]()__ - 
-* __[gulp-webp]()__ - 
-* __[]()__ - 
+* __[gulp-pug](https://www.npmjs.com/package/gulp-pug)__ - компиляция HTML5 из PUG
+* __[gulp-format-html](https://www.npmjs.com/package/gulp-format-html)__ - форматирование html в человеческий вид
+* __[del](https://www.npmjs.com/package/del)__ - удаляет папка\файлы
+* __[browser-sync](https://www.npmjs.com/package/browser-sync)__ - запускает виртуальный сервис
+* __[gulp-sass](https://www.npmjs.com/package/gulp-sass)__ - компиляция SASS\SCSS в CSS
+* __[gulp-clean-css](https://www.npmjs.com/package/gulp-clean-css)__ - минификация CSS
+* __[gulp-sourcemaps](https://www.npmjs.com/package/gulp-sourcemaps)__ - формирование фйла-карты для стилей
+* __[gulp-autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer)__ - генерация вендорных префиксов для CSS
+* __[gulp-notify](https://www.npmjs.com/package/gulp-notify)__ - вывод уведомлений из тасков не в консоль а в центр уведомлений системы
+* __[gulp-concat](https://www.npmjs.com/package/gulp-concat)__ - конкатенация файлов в тасках
+* __[gulp-rename](https://www.npmjs.com/package/gulp-rename)__ - позволяет переименовывать пути или сами файлы в тасках
+* __[gulp-uglify-es](https://www.npmjs.com/package/gulp-uglify-es)__ - минификация JS с поддежкой ES6
+* __[webpack-stream](https://www.npmjs.com/package/webpack-stream)__ - обработка JavaScript
+* __[gulp-webp](https://www.npmjs.com/package/gulp-webp)__ - формирует из jpg\png и т.д. картинки формата webp
+* __[gulp-imagemin](https://www.npmjs.com/package/gulp-imagemin)__ - минификация картинок
+* __[gulp-cache](https://www.npmjs.com/package/gulp-cache)__ - кэширует файлы
+* __[gulp.spritesmith](https://www.npmjs.com/package/gulp.spritesmith)__ - генерирует спрайты png\jpg
+* __[merge-stream](https://www.npmjs.com/package/merge-stream)__ - чередование потоков
 #### Документации
-* [GULP]() - Gulp
-* [PUG]() - Pug
-* [SASS]() - Sass\Scss
-
+* [GULP](https://gulpjs.com/)
+* [NPM пакеты](https://www.npmjs.com/)
+* [PUG](https://pugjs.org/api/getting-started.html)
+* [SASS](https://sass-scss.ru/)
 ## Структура папок <span id="directory"></span>
-Описание структуры папок проекта
+Описание структуры папок проекта и правила расположения файлов
 ___
 ## Styleguide разметки <span id="styleguidePug"></span>
 Описание стиля написания разметки PUG
@@ -70,4 +80,27 @@ ___
 ## Styleguide стилей <span id="styleguidCss"></span>
 Описание стиля написания CSS
 ___
+## Полезные плагины JS <span id="pluginsjs"></span>
+Ссылки на плагины на нативном JS
+___
+* __[imask](https://imask.js.org/)__ - маски ввода
+* __[Inputmask](https://github.com/RobinHerbots/Inputmask)__ - маски ввода
+* __[swiper](https://swiperjs.com/get-started)__ - слайдер
+* __[tingle](https://tingle.robinparisi.com/)__ - модальные окна
+* __[nouislider](https://refreshless.com/nouislider/)__ - плагин ползунка выбора цены и т.д.
+* __[spotlight](https://github.com/nextapps-de/spotlight)__ - галлерея изображений
+* __[glightbox](https://biati-digital.github.io/glightbox/)__ - галлерея изображений
+## Полезные плагины jQuery <span id="pluginsjquery"></span>
+Ссылки на плагины на jQuery
+___
+* __[slick](https://kenwheeler.github.io/slick/)__ - слайдер
+* __[fancybox](https://fancyapps.com/fancybox/3/)__ - галлерея изображений
+* __[magnific-popup](https://dimsemenov.com/plugins/magnific-popup/)__ - модальные окна
+* __[smartmenus](https://www.smartmenus.org/)__ - многоуровневое меню
+* __[stellarnav](https://github.com/vinnymoreira/stellarnav)__ - многоуровневое меню
+* __[aos](https://michalsnik.github.io/aos/)__ - плагин анимаций
+* __[niceselect](https://jqueryniceselect.hernansartorio.com/)__ - кастомизация select
+* __[twentytwenty](https://github.com/zurb/twentytwenty)__ - плагин сравнения 2х картинок
+* __[ion.rangeSlider](http://ionden.com/a/plugins/ion.rangeSlider/)__ - плагин ползунка выбора цены и т.д.
+
 [Вверх](#pageStart)
