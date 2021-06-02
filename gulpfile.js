@@ -95,6 +95,11 @@ var gulpSassOptions = {
 	outputStyle: 'expanded',
 	sourceComments: true
 }
+var autoprefixerOptions = {
+	overrideBrowserslist: ["last 14 versions", "IE 10"],
+	// cascade: true,
+	grid: "autoplace",
+}
 var pngSpriteOptions = {
 	imgName: 'sprite.png',
 	imgPath: '../img/sprite/sprite.png',
@@ -148,9 +153,12 @@ const styleCompiller = () => {
 	return src(path.styles.compile) // find styles
 		.pipe(sourcemaps.init()) // start making styles map
 		.pipe(sass(gulpSassOptions).on('error', notify.onError())) // compile to css and show errors
-		.pipe(autoprefixer()) // add prefixes
+		.pipe(autoprefixer(autoprefixerOptions)) // add prefixes
 		.pipe(cleanCSS(cleanCSSOptions)) // remove garbage from css
 		.pipe(sourcemaps.write('.')) // finish making styles map
+		.pipe(rename(function (path) { // change path
+			path.extname = ".min.css";
+		}))
 		.pipe(dest(path.styles.result)) // output css
 		.pipe(browserSync.stream()) // reload browser
 }
@@ -320,11 +328,11 @@ exports.default = series(
 // TASKS FOR PRODUCTION DIRECTORY
 // Transfer css files to build
 const prodStyles = () => {
-	return src('./app/css/common.css')
+	return src('./app/css/common.min.css')
 		.pipe(cleanCSS()) // minify css
-		.pipe(rename(function (path) { // change path
-			path.extname = ".min.css";
-		}))
+		// .pipe(rename(function (path) { // change path
+		// 	path.extname = ".min.css";
+		// }))
 		.pipe(dest('./prod/css/'))
 }
 exports.prodstyles = prodStyles;
