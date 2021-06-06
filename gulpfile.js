@@ -182,7 +182,7 @@ const jsCompiller = () => {
 		.pipe(webpackStream({
 			mode: 'none', // development production none
 			output: {
-				filename: 'common.js'
+				filename: 'common.min.js'
 			},
 			module: {
 				rules: [{
@@ -339,7 +339,7 @@ exports.prodstyles = prodStyles;
 
 // Transfer js files to build
 const prodScripts = () => {
-	return src('./app/js/common.js')
+	return src('./app/js/common.min.js')
 		.pipe(webpackStream({
 			mode: 'production', // development production none
 			output: {
@@ -371,7 +371,7 @@ exports.prodscripts = prodScripts;
 const prod = () => {
 	return src([
 		'./app/**/*',
-		'!./app/css/common.css', '!./app/css/*.map', '!./app/js/common.js',
+		'!./app/css/common.min.css', '!./app/css/*.map', '!./app/js/common.min.js',
 	])
 	.pipe(dest(path.dirs.prod))
 }
