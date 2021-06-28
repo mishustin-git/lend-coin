@@ -1,20 +1,17 @@
 include ../components/pug/vars.pug
 include ../components/pug/mixin.pug
-
 doctype
 html
 	head
 		include ../components/pug/meta.pug
 		include ../components/pug/links.pug
-		+title('Index page')
-		+desc('Index page desc')
+		//- +title('Index page')
+		//- +desc('Index page desc')
 	body
-
 		include ../blocks/header/header.pug
-
-		main.page-container
-			form(action="#", method="post")
-				input(type="tel", name="")
-
+		include ../blocks/platforms/platforms.pug
+		include ../blocks/characteristic/characteristic.pug
 		include ../blocks/footer/footer.pug
 		include ../components/pug/scripts.pug
+		
+		

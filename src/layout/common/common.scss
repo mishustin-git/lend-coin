@@ -1,13 +1,18 @@
 // Components
-@import "../components/scss/reset.scss";
-@import "../components/scss/vars.scss";
-@import "../components/scss/mixin.scss";
-@import "../components/scss/media.scss";
-@import "../components/scss/colors.scss";
-@import "../components/scss/buttons.scss";
+// @import "../components/scss/reset.scss";
+// @import "../components/scss/vars.scss";
+// @import "../components/scss/mixin.scss";
+// @import "../components/scss/media.scss";
+// @import "../components/scss/colors.scss";
+// @import "../components/scss/buttons.scss";
 @import "../components/scss/general.scss";
-@import "../components/scss/text-container.scss";
+// @import "../components/scss/text-container.scss";
+@import "../components/scss/burger.css";
 
 // Blocks
 @import "../blocks/header/header";
+@import "../blocks/platforms/platforms";
+@import "../blocks/characteristic/characteristic";
 @import "../blocks/footer/footer";
+
+@import "../../assets/fonts/ProximaNova/proxima_nova_condensed_regular.css";

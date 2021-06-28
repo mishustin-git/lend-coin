@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
+.burger,.header-navbar-burger{
+    padding: 0;
+    margin: 0; 
+    font-family: 'Quicksand', sans-serif;
+   }
+
+.burger{
+    /* position: absolute;
+    top: 71%; */
+    position: fixed;
+    /* top: 60px; */
+    top: 80px;
+    right: 0;
+    transform: translate(-50%,-50%);
+    width: 39px;
+    height: 36px;
+    cursor: pointer;
+    z-index: 2;
+    display: none;
+}
+.burger li{
+    list-style: none;
+    width: 100%;  height: 5px;
+    background: #fff;
+    position: absolute;
+    left: 0;
+    transform: translateY(-50%);
+    box-shadow: 0 0 7px rgba(0,0,0,.5);
+    transition: .9s;
+}
+.burger li:nth-of-type(1){
+    top: 20%;
+}
+.burger li:nth-of-type(2){
+    top: 50%;
+}
+.burger li:nth-of-type(3){
+    top: 80%;
+}
+.burger.active li:nth-of-type(1){
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg) rotateY(180deg);
+}
+.burger.active li:nth-of-type(2){
+    left: 300%;
+    opacity: 0;
+}
+.burger.active li:nth-of-type(3){
+    top: 50%;
+    transform: translateY(-50%) rotate(-45deg) rotateY(180deg);
+}
+
+.burger li:last-child{
+    width: 100%;  height: auto;
+    transform: none;
+    top: 100%;
+    font-size: 30px;
+    text-align: center;
+    transition: .9s;
+}
+.burger li:last-child::before,.burger li:last-child::after{
+    position: absolute;
+    top: 0;  left: 0;
+    width: 100%;  
+    transition: .9s;
+}
+.burger.active li:last-child::before{
+    transform: rotateY(90deg);
+    transition-delay: 0s;
+}
+.burger.active li:last-child::after{
+    transform: rotateY(0deg);
+    transition-delay: .5s;
+}

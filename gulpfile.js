@@ -8,6 +8,8 @@ const {
 // pug - html
 const pug = require('gulp-pug');
 const formatHtml = require('gulp-format-html');
+//parallax
+// const Parallax = require('parallax-js');
 // sass - css
 const sass = require('gulp-sass');
 const cleanCSS = require('gulp-clean-css');
@@ -42,9 +44,7 @@ const path = {
 		compile: './src/layout/common/*.{scss,sass}',
 		result: './app/css/',
 		libs: [
-			'./src/assets/libs/swiper/swiper-bundle.min.css', // slider
-			'./src/assets/libs/tingle-master/tingle.min.css', // modal windows
-			'./src/assets/libs/spotlight/spotlight.min.css' // gallery like fancybox
+			''
 		]
 	},
 	scripts: {
@@ -52,10 +52,7 @@ const path = {
 		compile: './src/layout/common/*.js',
 		result: './app/js/',
 		libs: [
-			'./src/assets/libs/Inputmask/inputmask.min.js', // telephone mask
-			'./src/assets/libs/swiper/swiper-bundle.min.js', // slider
-			'./src/assets/libs/tingle-master/tingle.min.js', // modal windows
-			'./src/assets/libs/spotlight/spotlight.min.js' // gallery like fancybox
+			'./src/assets/libs/jquery-3.6.0.js'
 		]
 	},
 	images: {
@@ -304,7 +301,7 @@ const watchFiles = () => {
 	});
 	watch(path.markup.whatch, markupCompiller);
 	watch(path.styles.whatch, styleCompiller);
-	watch(path.styles.libs, cssLibs);
+	// watch(path.styles.libs, cssLibs);
 	watch(path.images.source, transferImg);
 	watch(path.images.source, generateWebp);
 	watch(path.images.pngSource, generatePngSprite);
@@ -320,10 +317,10 @@ exports.watchFiles = watchFiles;
 // Launch gulp - "gulp"
 exports.default = series(
 	clearApp,
-	parallel(markupCompiller, styleCompiller, jsCompiller, cssLibs, jsLibs, transferImg, generateWebp, transferFavicon, transferFiles, generatePngSprite, generateSvgSprite, transferFonts),
+	parallel(markupCompiller, styleCompiller, jsCompiller, jsLibs, transferImg, generateWebp, transferFavicon, transferFiles, generatePngSprite, generateSvgSprite, transferFonts),
 	watchFiles
 );
-
+// cssLibs
 
 // TASKS FOR PRODUCTION DIRECTORY
 // Transfer css files to build
