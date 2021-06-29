@@ -115,11 +115,34 @@ function draw() {
             ctx.lineTo(2.5,h-3+0.5);
         ctx.stroke();
       }
+      else if (outerLineXX>w)
+      {
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0+outerLineXX, 0);
+      }
     ctx.stroke();
     then = now - (delta % interval);
   }
 }
-document.addEventListener("DOMContentLoaded", function() {
-  draw();
+// document.addEventListener("DOMContentLoaded", function() {
+//   draw();
+// });
+
+$(window).scroll(function() {
+	console.log('event scroll');
+	if (ZagolovokBlock2IsInVision()) {
+		ShowText();
+	}
 });
-// }
+
+var $block2 = $('#border-out');
+
+function ZagolovokBlock2IsInVision() {
+	var windowBottom = $(window).scrollTop() + $(window).height();
+	var block2Bottom = $block2.offset().top + $('.inside-block').height();
+	return windowBottom >= block2Bottom;
+}
+
+function ShowText() {
+	draw();
+}

@@ -1,0 +1,44 @@
+@font-face {
+	font-family: 'Proxima Nova';
+	font-weight: normal;
+	font-style: normal;
+	src: url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova.eot'); /*IE 9 Compatibility Mode*/
+	src: url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova.eot?#iefix') format('embedded-opentype'), /*IE < 9*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova.woff2') format('woff2'), /*Super Modern Browsers*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova.woff') format('woff'), /*Firefox >= 3.6, any other modern browser*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova.ttf') format('truetype') /*Safari, Android, iOS*/
+		/* url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova.svg#proxima_nova_condensed_regular') format('svg'); Chrome < 4, Legacy iOS */
+}
+@font-face {
+	font-family: 'Proxima Nova';
+	font-weight: 800;
+	font-style: normal;
+	src: url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (4).eot'); /*IE 9 Compatibility Mode*/
+	src: url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (4).eot?#iefix') format('embedded-opentype'), /*IE < 9*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (4).woff2') format('woff2'), /*Super Modern Browsers*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (4).woff') format('woff'), /*Firefox >= 3.6, any other modern browser*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (4).ttf') format('truetype') /*Safari, Android, iOS*/
+		/* url('../../../../../fonts/ProximaNova/ProximaNova-Bold.svg#proxima_nova_condensed_regular') format('svg'); Chrome < 4, Legacy iOS */
+}
+@font-face {
+	font-family: 'Proxima Nova';
+	font-weight: 600;
+	font-style: normal;
+	src: url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (1).eot'); /*IE 9 Compatibility Mode*/
+	src: url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (1).eot?#iefix') format('embedded-opentype'), /*IE < 9*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (1).woff2') format('woff2'), /*Super Modern Browsers*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (1).woff') format('woff'), /*Firefox >= 3.6, any other modern browser*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (1).ttf') format('truetype') /*Safari, Android, iOS*/
+		/* url('../../../../../fonts/ProximaNova/proxima_nova_semibold.svg#proxima_nova_condensed_regular') format('svg'); Chrome < 4, Legacy iOS */
+}
+@font-face {
+	font-family: 'Proxima Nova';
+	font-weight: 300;
+	font-style: normal;
+	src: url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (5).eot'); /*IE 9 Compatibility Mode*/
+	src: url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (5).eot?#iefix') format('embedded-opentype'), /*IE < 9*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (5).woff2') format('woff2'), /*Super Modern Browsers*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (5).woff') format('woff'), /*Firefox >= 3.6, any other modern browser*/
+		url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (5).ttf') format('truetype') /*Safari, Android, iOS*/
+		/* url('../../../../../fonts/ProximaNova1/ofont.ru_Proxima Nova (4).svg#proxima_nova_condensed_regular') format('svg'); Chrome < 4, Legacy iOS */
+}

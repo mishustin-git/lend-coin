@@ -44,7 +44,9 @@ const path = {
 		compile: './src/layout/common/*.{scss,sass}',
 		result: './app/css/',
 		libs: [
-			''
+			'./src/assets/libs/swiper/swiper-bundle.min.css', // slider
+			'./src/assets/libs/tingle-master/tingle.min.css', // modal windows
+			'./src/assets/libs/spotlight/spotlight.min.css' // gallery like fancybox
 		]
 	},
 	scripts: {
@@ -52,11 +54,17 @@ const path = {
 		compile: './src/layout/common/*.js',
 		result: './app/js/',
 		libs: [
+			'./src/assets/libs/Inputmask/inputmask.min.js', // telephone mask
+			'./src/assets/libs/swiper/swiper-bundle.min.js', // slider
+			'./src/assets/libs/tingle-master/tingle.min.js', // modal windows
+			'./src/assets/libs/spotlight/spotlight.min.js', // gallery like fancybox
 			'./src/assets/libs/jquery-3.6.0.js'
+			// './src/assets/libs/parallax.js'
+			// './src/assets/libs/parallax-js/src/parallax.min.js'
 		]
 	},
 	images: {
-		source: ['./src/layout/**/*.{jpg,jpeg,png,gif}', '!./src/layout/common/img/icons/**/*.{jpg,jpeg,png,gif}'],
+		source: ['./src/layout/**/*.{jpg,jpeg,png}', '!./src/layout/common/img/icons/**/*.{jpg,jpeg,png}'],
 		svgSource: './src/layout/common/img/icons/svg/*.svg',
 		pngSource: './src/layout/common/img/icons/png/*.png',
 		pngSource2x: './src/layout/common/img/icons/png/*-2x.png',
@@ -219,7 +227,7 @@ exports.jslibs = jsLibs;
 // Transfer images to app directory
 const transferImg = () => {
 	return src(path.images.source) // get images
-	.pipe(cache(imagemin(imageminOptions))) // generate images cache and minify them
+	// .pipe(cache(imagemin(imageminOptions))) // generate images cache and minify them
 	.pipe(rename(function (path) { // change path
 		path.dirname = "img/";
 	}))
@@ -240,25 +248,25 @@ const generateWebp = () => {
 exports.generatewebp = generateWebp;
 
 // Generate png sprite to app directory
-const generatePngSprite = () => {
-	var spriteData = 
-		src(path.images.pngSource)
-		.pipe(spritesmith(pngSpriteOptions));
+// const generatePngSprite = () => {
+// 	var spriteData = 
+// 		src(path.images.pngSource)
+// 		.pipe(spritesmith(pngSpriteOptions));
 
-	var imgStream = spriteData.img
-		.pipe(buffer())
-		.pipe(imagemin(imageminOptions))
-		.pipe(rename(function (path) { // change path
-			path.dirname = "img/sprite";
-		}))
-		.pipe(dest(path.images.result));
+// 	var imgStream = spriteData.img
+// 		.pipe(buffer())
+// 		.pipe(imagemin(imageminOptions))
+// 		.pipe(rename(function (path) { // change path
+// 			path.dirname = "img/sprite";
+// 		}))
+// 		.pipe(dest(path.images.result));
 
-	var cssStream = spriteData.css
-		.pipe(dest(path.styles.result));
+// 	var cssStream = spriteData.css
+// 		.pipe(dest(path.styles.result));
 
-	return merge(imgStream, cssStream);
-}
-exports.generatepngsprite = generatePngSprite;
+// 	return merge(imgStream, cssStream);
+// }
+// exports.generatepngsprite = generatePngSprite;
 
 // Generate svg sprite to app directory
 const generateSvgSprite = () => {
@@ -301,11 +309,11 @@ const watchFiles = () => {
 	});
 	watch(path.markup.whatch, markupCompiller);
 	watch(path.styles.whatch, styleCompiller);
-	// watch(path.styles.libs, cssLibs);
+	watch(path.styles.libs, cssLibs);
 	watch(path.images.source, transferImg);
 	watch(path.images.source, generateWebp);
-	watch(path.images.pngSource, generatePngSprite);
-	watch(path.images.svgSource, generateSvgSprite);
+	// watch(path.images.pngSource, generatePngSprite);
+	// watch(path.images.svgSource, generateSvgSprite);
 	watch(path.favicon.source, transferFavicon);
 	watch(path.files.source, transferFiles);
 	watch(path.scripts.libs, jsLibs);
@@ -317,10 +325,10 @@ exports.watchFiles = watchFiles;
 // Launch gulp - "gulp"
 exports.default = series(
 	clearApp,
-	parallel(markupCompiller, styleCompiller, jsCompiller, jsLibs, transferImg, generateWebp, transferFavicon, transferFiles, generatePngSprite, generateSvgSprite, transferFonts),
+	parallel(markupCompiller, styleCompiller, jsCompiller, cssLibs, jsLibs, transferImg, transferFavicon, transferFiles, transferFonts),
 	watchFiles
 );
-// cssLibs
+
 
 // TASKS FOR PRODUCTION DIRECTORY
 // Transfer css files to build

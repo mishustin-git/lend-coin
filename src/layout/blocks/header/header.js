@@ -1,4 +1,3 @@
-// export function header() {
 	$(document).ready(function(){
 		$('.burger').on('click', function(){
 			$(this).toggleClass('active');
@@ -17,16 +16,6 @@
 			}
 		})                  
 	});
-	
-	// if ($(window).width() >= 1200) {
-		// 	if ($("#parallax-coin").length){
-			// 	  var scene2 = $('#parallax-coin').get(0);
-	// 	  var parallaxInstance1 = new Parallax(scene2);
-	// 	} else {console.log('#parallax-coin not found on this page');}
-	//   } else{}
-	
-	
-	
 	window.onload = function (){
 		var scene = document.getElementById('parallax-coin');
 		var parallaxInstance = new Parallax(scene);
